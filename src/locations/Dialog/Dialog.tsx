@@ -1,8 +1,10 @@
+import classes from "./Dialog.module.css";
+
 import { DialogAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
-import { Documentation } from "./Sidebar";
+import { Documentation } from "../../components/Documentation";
 
-const Dialog = () => {
+export const Dialog = () => {
   const sdk = useSDK<DialogAppSDK>();
 
   const contentTypeId = (sdk.parameters.invocation as any)
@@ -14,11 +16,6 @@ const Dialog = () => {
   }
 
   return (
-    <Documentation
-      contentTypeId={contentTypeId}
-      style={{ padding: "16px 24px" }}
-    />
+    <Documentation contentTypeId={contentTypeId} className={classes.root} />
   );
 };
-
-export default Dialog;

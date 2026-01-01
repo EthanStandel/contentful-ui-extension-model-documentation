@@ -24,7 +24,7 @@ type EntryReference = {
   };
 };
 
-const EntryReferenceList = () => {
+export const EntryReferenceListField = () => {
   const sdk = useSDK<FieldAppSDK>();
   const [value, setValue] = useFieldValue<Array<EntryReference>>();
 
@@ -105,7 +105,7 @@ const fetchContentType = async (sdk: BaseAppSDK, id: string) => {
   if (!contentTypeCache.has(id)) {
     contentTypeCache.set(
       id,
-      await sdk.cma.contentType.get({ contentTypeId: id })
+      await sdk.cma.contentType.get({ contentTypeId: id }),
     );
   }
 
@@ -194,5 +194,3 @@ const EntryInstance = ({
     />
   );
 };
-
-export default EntryReferenceList;
