@@ -1,8 +1,7 @@
-import classes from "./Dialog.module.css";
-
 import { DialogAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import { Documentation } from "../../components/Documentation";
+import { css } from "emotion";
 
 export const Dialog = () => {
   const sdk = useSDK<DialogAppSDK>();
@@ -16,6 +15,9 @@ export const Dialog = () => {
   }
 
   return (
-    <Documentation contentTypeId={contentTypeId} className={classes.root} />
+    <Documentation
+      contentTypeId={contentTypeId}
+      className={css({ padding: "16px 24px" })}
+    />
   );
 };

@@ -1,5 +1,3 @@
-import classes from "./Documentation.module.css";
-
 import { useSDK } from "@contentful/react-apps-toolkit";
 import {
   documentToReactComponents,
@@ -11,11 +9,12 @@ import {
   BLOCKS,
 } from "@contentful/rich-text-types";
 import { EmbeddedAsset } from "../EmbeddedAsset";
-import { cx } from "emotion";
+import { css, cx } from "emotion";
+import { Flex } from "@contentful/f36-components";
 
 export type DocumentationProps = {
   contentTypeId: string;
-} & Omit<ComponentProps<"div">, "children">;
+} & Omit<ComponentProps<typeof Flex>, "children">;
 
 export const Documentation = ({
   contentTypeId,
@@ -47,9 +46,14 @@ export const Documentation = ({
   }, [sdk]);
 
   return (
-    <div className={cx(classes.root, props.className)} {...props}>
+    <Flex
+      flexDirection="column"
+      gap="16px"
+      className={cx(css({ lineHeight: "1.15" }), props.className)}
+      {...props}
+    >
       {documentationRender}
-    </div>
+    </Flex>
   );
 };
 

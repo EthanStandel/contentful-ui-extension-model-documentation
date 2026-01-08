@@ -10,7 +10,7 @@ import { BaseAppSDK, FieldAppSDK } from "@contentful/app-sdk";
 import { type ArrayEntryFieldAPI } from "@contentful/app-sdk/dist/types/field.types";
 import type { EntryProps, ContentTypeProps } from "contentful-management";
 import { useEffect, useState } from "react";
-import { ChevronDownIcon, PlusIcon, RichtextIcon } from "@contentful/f36-icons";
+import { ArrowDownIcon, PlusIcon, RichTextIcon } from "@contentful/f36-icons";
 
 type Entry = {
   sys: { id: string };
@@ -76,7 +76,7 @@ export const EntryReferenceListField = () => {
                 fontWeight: "bold",
               }}
               startIcon={<PlusIcon variant="secondary" />}
-              endIcon={<ChevronDownIcon variant="secondary" />}
+              endIcon={<ArrowDownIcon variant="secondary" />}
             >
               Add content
             </Button>
@@ -136,7 +136,7 @@ const CreateNewContentTypeWithDocumentationOption = ({
           Create new entry
         </Menu.Item>
         <Menu.Item
-          icon={<RichtextIcon variant="secondary" />}
+          icon={<RichTextIcon variant="secondary" />}
           onClick={() =>
             sdk.dialogs.openCurrent({
               title: `${contentType.name ?? ""} documentation`,

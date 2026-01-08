@@ -5,3 +5,20 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+button,
+a {
+  max-width: none !important;
+}
+
+ul {
+  padding-left: 0;
+}
+
+p {
+  margin-bottom: 0 !important;
+}
+
+td {
+  vertical-align: middle !important;
+}

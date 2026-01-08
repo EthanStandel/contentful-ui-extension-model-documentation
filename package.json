@@ -5,14 +5,15 @@
   "dependencies": {
     "@contentful/app-sdk": "^4.40.0",
     "@contentful/f36-components": "^4.80.5",
-    "@contentful/f36-icons": "^4.29.1",
+    "@contentful/f36-icons": "^5.9.0",
     "@contentful/f36-tokens": "4.2.0",
     "@contentful/react-apps-toolkit": "^1.2.16",
     "@contentful/rich-text-react-renderer": "^16.1.0",
     "contentful-management": "^11.54.4",
     "emotion": "10.0.27",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "swr": "^2.3.8"
   },
   "scripts": {
     "start": "vite",

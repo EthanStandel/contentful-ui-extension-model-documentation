@@ -4,6 +4,7 @@ import { SDKProvider } from "@contentful/react-apps-toolkit";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import LocalhostWarning from "./components/LocalhostWarning";
+import { SWRConfig } from "swr";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
@@ -13,8 +14,17 @@ if (process.env.NODE_ENV === "development" && window.self === window.top) {
 } else {
   root.render(
     <SDKProvider>
-      <GlobalStyles />
-      <App />
+      <SWRConfig
+        value={{
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+          refreshWhenHidden: false,
+          refreshWhenOffline: false,
+        }}
+      >
+        <GlobalStyles />
+        <App />
+      </SWRConfig>
     </SDKProvider>,
   );
 }

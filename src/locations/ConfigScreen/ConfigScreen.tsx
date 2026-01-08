@@ -1,77 +1,117 @@
-import { useCallback, useState, useEffect } from "react";
-import { ConfigAppSDK } from "@contentful/app-sdk";
-import { Heading, Form, Paragraph, Flex } from "@contentful/f36-components";
-import { css } from "emotion";
-import { /* useCMA, */ useSDK } from "@contentful/react-apps-toolkit";
 import {
-  AppInstallationParameters,
-  getDefaultAppInstallationParameters,
-} from "../../config/AppInstallationParameters";
+  Heading,
+  Paragraph,
+  Flex,
+  Table,
+  Menu,
+  IconButton,
+} from "@contentful/f36-components";
+import { css } from "emotion";
+import { useDocumentationTypeExists } from "../../hooks/useDocumentationTypeExists";
+import { useAppParameters } from "../../hooks/useAppParameters";
+import { CreateDocumentationTypeButtonGroup } from "./components/CreateDocumentationTypeButtonGroup/CreateDocumentationTypeButtonGroup";
+import { useFetchAllContentType } from "../../hooks/useFetchAllContentType";
+import { useFetchAllDocumentationEntries } from "../../hooks/useFetchAllDocumentationEntries";
+import { DotsThreeIcon } from "@contentful/f36-icons";
 
 export const ConfigScreen = () => {
-  const [parameters, setParameters] = useState<AppInstallationParameters>(
-    getDefaultAppInstallationParameters,
-  );
-  const sdk = useSDK<ConfigAppSDK>();
-  /*
-     To use the cma, inject it as follows.
-     If it is not needed, you can remove the next line.
-  */
-  // const cma = useCMA();
-
-  const onConfigure = useCallback(async () => {
-    // This method will be called when a user clicks on "Install"
-    // or "Save" in the configuration screen.
-    // for more details see https://www.contentful.com/developers/docs/extensibility/ui-extensions/sdk-reference/#register-an-app-configuration-hook
-
-    // Get current the state of EditorInterface and other entities
-    // related to this app installation
-    const currentState = await sdk.app.getCurrentState();
-
-    return {
-      // Parameters to be persisted as the app configuration.
-      parameters,
-      // In case you don't want to submit any update to app
-      // locations, you can just pass the currentState as is
-      targetState: currentState,
-    };
-  }, [parameters, sdk]);
-
-  useEffect(() => {
-    // `onConfigure` allows to configure a callback to be
-    // invoked when a user attempts to install the app or update
-    // its configuration.
-    sdk.app.onConfigure(() => onConfigure());
-  }, [sdk, onConfigure]);
-
-  useEffect(() => {
-    (async () => {
-      // Get current parameters of the app.
-      // If the app is not installed yet, `parameters` will be `null`.
-      const currentParameters: AppInstallationParameters | null =
-        await sdk.app.getParameters();
-
-      if (currentParameters) {
-        setParameters(currentParameters);
-      }
-
-      // Once preparation has finished, call `setReady` to hide
-      // the loading screen and present the app to a user.
-      sdk.app.setReady();
-    })();
-  }, [sdk]);
+  const { sdk, parameters } = useAppParameters();
+  const labels = parameters.labels.configScreen;
+  const { exists } = useDocumentationTypeExists();
+  const { contentTypes } = useFetchAllContentType();
+  const { documentationEntries, refetchDocumentationEntries } =
+    useFetchAllDocumentationEntries();
 
   return (
-    <Flex
-      flexDirection="column"
-      className={css({ margin: "80px", maxWidth: "800px" })}
-    >
-      <Form>
-        <Heading>App Config</Heading>
-        <Paragraph>
-          Welcome to your contentful app. This is your config page.
-        </Paragraph>
-      </Form>
+    <Flex flexDirection="column" gap="2rem" className={css({ margin: "80px" })}>
+      <Heading>{labels.heading}</Heading>
+      <Flex flexDirection="column" gap="1rem">
+        {labels.subheading.map((p, index) => (
+          <Paragraph key={index}>{p}</Paragraph>
+        ))}
+      </Flex>
+      <CreateDocumentationTypeButtonGroup />
+      {exists && (
+        <Flex flexDirection="column" gap="1rem">
+          <Paragraph>{labels.documentModels}</Paragraph>
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.Cell>Name</Table.Cell>
+                <Table.Cell>ID</Table.Cell>
+                <Table.Cell align="right">Actions</Table.Cell>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {contentTypes.map((ct) => {
+                const documentation = documentationEntries.find(
+                  (entry) =>
+                    entry.fields.typeId[parameters.documentationLocale] ===
+                    ct.sys.id,
+                );
+                return (
+                  <Table.Row key={ct.sys.id}>
+                    <Table.Cell>{ct.name}</Table.Cell>
+                    <Table.Cell>{ct.sys.id}</Table.Cell>
+                    <Table.Cell align="right">
+                      <Menu>
+                        <Menu.Trigger>
+                          <IconButton
+                            variant="transparent"
+                            size="small"
+                            icon={<DotsThreeIcon size="small" />}
+                            aria-label="Open menu"
+                          />
+                        </Menu.Trigger>
+                        <Menu.List>
+                          <Menu.Item
+                            isDisabled={!!documentation}
+                            onClick={async () => {
+                              const created = await sdk.cma.entry.create(
+                                {
+                                  spaceId: sdk.ids.space,
+                                  environmentId: sdk.ids.environment,
+                                  contentTypeId:
+                                    parameters.documentationModel.contentTypeId,
+                                },
+                                {
+                                  fields: {
+                                    [parameters.documentationModel.fields.label
+                                      .id]: {
+                                      [parameters.documentationLocale]: `[INTERNAL] "${ct.name}" documentation`,
+                                    },
+                                    [parameters.documentationModel.fields.type
+                                      .id]: {
+                                      [parameters.documentationLocale]:
+                                        ct.sys.id,
+                                    },
+                                  },
+                                },
+                              );
+                              await refetchDocumentationEntries();
+                              await sdk.navigator.openEntry(created.sys.id);
+                            }}
+                          >
+                            Create documentation
+                          </Menu.Item>
+                          <Menu.Item
+                            isDisabled={!documentation}
+                            onClick={() =>
+                              sdk.navigator.openEntry(documentation?.sys.id!)
+                            }
+                          >
+                            View/Edit documentation
+                          </Menu.Item>
+                        </Menu.List>
+                      </Menu>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        </Flex>
+      )}
     </Flex>
   );
 };
