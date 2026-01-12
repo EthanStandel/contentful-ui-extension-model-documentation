@@ -14,19 +14,14 @@ export const useDocumentationTypeExists = () => {
     mutate: update,
   } = useSWR(
     [
-      "useDocumentationTypeExists",
+      "sdk.cma.contentType.get",
+      sdk,
       isInstalled,
       sdk.ids.space,
       sdk.ids.environment,
       parameters.documentationModel.contentTypeId,
     ],
-    async ([_id, isInstalled, spaceId, environmentId, contentTypeId]: [
-      string,
-      boolean,
-      string,
-      string,
-      string,
-    ]) => {
+    async ([, sdk, isInstalled, spaceId, environmentId, contentTypeId]) => {
       try {
         if (!isInstalled) return false;
         const response = await sdk.cma.contentType.get({

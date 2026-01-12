@@ -21,34 +21,6 @@ export namespace AppInstallationParameters {
         }),
       }),
     }),
-    labels: z.object({
-      global: z.object({
-        documentation: z.string(),
-      }),
-      configScreen: z.object({
-        heading: z.string(),
-        subheading: z.array(z.string()),
-        cta: z.object({
-          createDocumentationContentType: z.object({
-            label: z.string(),
-            tooltip: z.object({
-              uninstalled: z.string(),
-              exists: z.string(),
-            }),
-          }),
-          viewDocumentationContentType: z.object({
-            label: z.string(),
-          }),
-          createDocumentation: z.object({
-            label: z.string(),
-          }),
-          viewDocumentation: z.object({
-            label: z.string(),
-          }),
-        }),
-        documentModels: z.string(),
-      }),
-    }),
   });
 
   export const isValid = (input: unknown): input is Type =>
@@ -68,44 +40,12 @@ export namespace AppInstallationParameters {
         },
         type: {
           id: "typeId",
-          name: "Type ID",
+          name: "Type ID (do not modify)",
         },
         documentation: {
           id: "documentation",
           name: "Documentation",
         },
-      },
-    },
-    labels: {
-      global: {
-        documentation: "Documentation",
-      },
-      configScreen: {
-        heading: "Contentful Model Documentation UI Extension",
-        subheading: [
-          "This plugin creates one content type to represent the documentation for all other content types.",
-        ],
-        cta: {
-          createDocumentationContentType: {
-            label: "Create documentation content type",
-            tooltip: {
-              uninstalled:
-                "The content type cannot be generated until this extension is installed to your space.",
-              exists: "This content type already exists",
-            },
-          },
-          viewDocumentationContentType: {
-            label: "View documentation content type",
-          },
-          createDocumentation: {
-            label: "Create documentation",
-          },
-          viewDocumentation: {
-            label: "View documentation",
-          },
-        },
-        documentModels:
-          "Create or view documentation for the content-types listed below",
       },
     },
   });

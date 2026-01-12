@@ -3,7 +3,7 @@ import {
   documentToReactComponents,
   Options as RichTextRenderOptions,
 } from "@contentful/rich-text-react-renderer";
-import { ComponentProps, ReactNode, useEffect, useState } from "react";
+import { ComponentProps, useEffect, useMemo } from "react";
 import {
   Document as RichTextDocument,
   BLOCKS,
@@ -11,45 +11,67 @@ import {
 import { EmbeddedAsset } from "../EmbeddedAsset";
 import { css, cx } from "emotion";
 import { Flex } from "@contentful/f36-components";
-
-export type DocumentationProps = {
-  contentTypeId: string;
-} & Omit<ComponentProps<typeof Flex>, "children">;
+import useSWR from "swr";
+import { useAppParameters } from "../../hooks/useAppParameters";
+import type { WindowAPI } from "@contentful/app-sdk";
 
 export const Documentation = ({
   contentTypeId,
   ...props
-}: DocumentationProps) => {
+}: {
+  contentTypeId: string;
+} & Omit<ComponentProps<typeof Flex>, "children">) => {
   const sdk = useSDK();
-
-  const [documentationRender, setDocumentationRender] =
-    useState<ReactNode>(null);
+  const { parameters } = useAppParameters();
 
   useEffect(() => {
-    (async () => {
+    const window = "window" in sdk ? (sdk.window as WindowAPI) : null;
+    if (!window) return;
+    window.startAutoResizer();
+  }, [sdk]);
+
+  const { data: documentation } = useSWR(
+    [
+      "sdk.cma.entry.getMany",
+      contentTypeId,
+      parameters.documentationModel.contentTypeId,
+    ],
+    async ([, contentTypeId, documentationContentTypeId]) => {
       const response = await sdk.cma.entry.getMany({
         query: {
-          content_type: "internalContentfulDocumentation",
+          content_type: documentationContentTypeId,
           include: 1,
           "fields.typeId[match]": contentTypeId,
         },
       });
-      if (response.items.length < 1) return;
+      if (response.items.length < 1) return null;
       const [result] = response.items;
-      setDocumentationRender(
-        documentToReactComponents(
-          result.fields.documentation["en-US"] as RichTextDocument,
-          richTextOptions,
-        ),
-      );
-    })();
-  }, [sdk]);
+      return result;
+    },
+  );
+
+  const documentationRender = useMemo(
+    () =>
+      documentation &&
+      documentToReactComponents(
+        documentation.fields.documentation[
+          parameters.documentationLocale
+        ] as RichTextDocument,
+        richTextOptions,
+      ),
+    [documentation, parameters.documentationLocale],
+  );
+
+  if (!documentationRender) return;
 
   return (
     <Flex
       flexDirection="column"
-      gap="16px"
-      className={cx(css({ lineHeight: "1.15" }), props.className)}
+      gap="1rem"
+      className={cx(
+        css({ lineHeight: "1.15", paddingTop: "1rem" }),
+        props.className,
+      )}
       {...props}
     >
       {documentationRender}

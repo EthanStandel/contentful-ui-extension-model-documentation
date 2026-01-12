@@ -1,43 +1,37 @@
-import classes from "./EmbeddedAsset.module.css";
-
 import { SidebarAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
-import { AssetProps } from "contentful-management";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Node } from "@contentful/rich-text-types";
+import { css } from "emotion";
+import useSWR from "swr";
+import { useAppParameters } from "../../hooks/useAppParameters";
 
 export const EmbeddedAsset = ({ node }: { node: Node }) => {
   const sdk = useSDK<SidebarAppSDK>();
-  const [asset, setAsset] = useState<AssetProps | null>(null);
-
-  useEffect(() => {
-    sdk.window.startAutoResizer();
-  }, [sdk]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await sdk.cma.asset.get({
-        assetId: node.data.target.sys.id,
-      });
+  const { parameters } = useAppParameters();
+  const { data: asset } = useSWR(
+    ["sdk.cma.asset.get", sdk, node.data.target.sys.id],
+    async ([, sdk, assetId]) => {
+      const response = await sdk.cma.asset.get({ assetId });
       if (!response || !response.fields) return;
-      setAsset(response);
-    })();
-  }, [sdk, node]);
+      return response;
+    },
+  );
 
   if (!asset) return null;
 
-  const fileUrl = asset.fields.file?.["en-US"]?.url;
+  const fileUrl = asset.fields.file?.[parameters.documentationLocale]?.url;
 
   return (
     <a href={fileUrl} target="_blank" rel="noreferrer">
       <img
         src={fileUrl}
         alt={
-          asset.fields.description?.["en-US"] ||
-          asset.fields.title?.["en-US"] ||
+          asset.fields.description?.[parameters.documentationLocale] ||
+          asset.fields.title?.[parameters.documentationLocale] ||
           ""
         }
-        className={classes.img}
+        className={css({ maxWidth: "100%", height: "auto" })}
       />
     </a>
   );

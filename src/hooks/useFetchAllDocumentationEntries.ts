@@ -14,17 +14,21 @@ export const useFetchAllDocumentationEntries = () => {
   const { data: documentationEntries, mutate: refetchDocumentationEntries } =
     useSWR(
       [
-        "useFetchAllDocumentationEntries",
+        "sdk.cma.entry.getMany",
         sdk,
         parameters.documentationModel.contentTypeId,
       ],
-      async ([_id, sdk, contentTypeId]: [string, KnownAppSDK, string]) => {
+      async ([, sdk, documentationContentTypeId]) => {
         try {
           const collection = Array<Array<EntryProps>>();
 
           const fetchDocumentationEntries = async (skip = 0) => {
             const response = await sdk.cma.entry.getMany({
-              query: { include: PAGE_SIZE, skip, content_type: contentTypeId },
+              query: {
+                include: PAGE_SIZE,
+                skip,
+                content_type: documentationContentTypeId,
+              },
             });
 
             collection.push(response.items);

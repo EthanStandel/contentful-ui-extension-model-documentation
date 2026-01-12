@@ -17,17 +17,12 @@ export const useFetchAllContentType = ({
 
   const { data: contentTypes, mutate: refetch } = useSWR(
     [
-      "useAllContentType",
+      "sdk.cma.contentType.getMany",
       sdk,
       filterDocumentationType,
       parameters.documentationModel.contentTypeId,
     ],
-    async ([_id, sdk, filterDocumentationType, contentTypeId]: [
-      string,
-      KnownAppSDK,
-      boolean,
-      string,
-    ]) => {
+    async ([, sdk, filterDocumentationType, contentTypeId]) => {
       try {
         const collection = Array<Array<ContentTypeProps>>();
 

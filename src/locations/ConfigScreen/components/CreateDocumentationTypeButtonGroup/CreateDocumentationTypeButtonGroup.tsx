@@ -10,16 +10,15 @@ import { createDocumentationType } from "./utils/createDocumentationType";
 export const CreateDocumentationTypeButtonGroup = () => {
   const [loading, setLoading] = useState(false);
   const { parameters } = useAppParameters();
-  const labels = parameters.labels.configScreen;
   const sdk = useSDK<ConfigAppSDK>();
   const isInstalled = useIsInstalled();
   const { exists, updating, update } = useDocumentationTypeExists();
 
   const createCTATooltipMessage = (() => {
     if (!isInstalled) {
-      return labels.cta.createDocumentationContentType.tooltip.uninstalled;
+      return CONSTANTS.createCta.tooltip.uninstalled;
     } else if (exists) {
-      return labels.cta.createDocumentationContentType.tooltip.exists;
+      return CONSTANTS.createCta.tooltip.exists;
     } else return "";
   })();
 
@@ -44,7 +43,7 @@ export const CreateDocumentationTypeButtonGroup = () => {
             }
           }}
         >
-          {labels.cta.createDocumentationContentType.label}
+          {CONSTANTS.createCta.label}
         </Button>
       </Tooltip>
       {exists && (
@@ -54,9 +53,23 @@ export const CreateDocumentationTypeButtonGroup = () => {
           // Does not work on local, but should work when deployed on same-origin
           href={`/spaces/${sdk.ids.space}/environments/${sdk.ids.environment}/content_types/${parameters.documentationModel.contentTypeId}`}
         >
-          {labels.cta.viewDocumentationContentType.label}
+          {CONSTANTS.viewCta.label}
         </Button>
       )}
     </Flex>
   );
+};
+
+const CONSTANTS = {
+  createCta: {
+    label: "Create documentation content type",
+    tooltip: {
+      uninstalled:
+        "The content type cannot be generated until this extension is installed to your space.",
+      exists: "This content type already exists",
+    },
+  },
+  viewCta: {
+    label: "View documentation content type",
+  },
 };

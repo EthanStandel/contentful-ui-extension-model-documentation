@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 export const useIsInstalled = () => {
   const sdk = useSDK<ConfigAppSDK>();
-  const { data: isInstalled } = useSWR("isInstalled", () =>
+  const { data: isInstalled } = useSWR(["sdk.app.isInstalled", sdk], () =>
     sdk.app.isInstalled(),
   );
   return !!isInstalled;

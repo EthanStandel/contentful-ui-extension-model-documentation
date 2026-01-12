@@ -1,8 +1,7 @@
 import { ConfigAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import { AppInstallationParameters } from "../config/AppInstallationParameters";
-import useSWR from "swr";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useStableResponse } from "./useStableResponse";
 
 export const useAppParameters = () => {
@@ -12,8 +11,8 @@ export const useAppParameters = () => {
   const sdk = useSDK<ConfigAppSDK>();
 
   useEffect(() => {
-    sdk.app.onConfigure(async () => {
-      const currentState = await sdk.app.getCurrentState();
+    sdk.app?.onConfigure(async () => {
+      const currentState = await sdk.app?.getCurrentState();
 
       return {
         parameters,
@@ -24,28 +23,16 @@ export const useAppParameters = () => {
 
   useEffect(() => {
     (async () => {
-      const currentParameters = await sdk.app.getParameters();
+      const currentParameters =
+        (await sdk.app?.getParameters()) ?? sdk.parameters.installation;
 
       if (AppInstallationParameters.isValid(currentParameters)) {
         setParameters(currentParameters);
       }
 
-      sdk.app.setReady();
+      sdk?.app.setReady();
     })();
   }, [sdk]);
-
-  useEffect(
-    () =>
-      sdk.app.onConfigure(async () => {
-        const currentState = await sdk.app.getCurrentState();
-
-        return {
-          parameters,
-          targetState: currentState,
-        };
-      }),
-    [sdk, parameters],
-  );
 
   return useStableResponse({ parameters, setParameters, sdk });
 };
