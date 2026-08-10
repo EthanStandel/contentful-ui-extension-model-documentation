@@ -29,8 +29,7 @@ export const useAppParameters = () => {
       if (AppInstallationParameters.isValid(currentParameters)) {
         setParameters(currentParameters);
       }
-
-      sdk?.app.setReady();
+      sdk.app?.setReady();
     })();
   }, [sdk]);
 

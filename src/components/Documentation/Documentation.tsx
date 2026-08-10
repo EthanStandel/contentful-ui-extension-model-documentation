@@ -35,13 +35,14 @@ export const Documentation = ({
       "sdk.cma.entry.getMany",
       contentTypeId,
       parameters.documentationModel.contentTypeId,
+      parameters.documentationModel.fields.type.id,
     ],
-    async ([, contentTypeId, documentationContentTypeId]) => {
+    async ([, contentTypeId, documentationContentTypeId, typeFieldId]) => {
       const response = await sdk.cma.entry.getMany({
         query: {
           content_type: documentationContentTypeId,
           include: 1,
-          "fields.typeId[match]": contentTypeId,
+          [`fields.${typeFieldId}`]: contentTypeId,
         },
       });
       if (response.items.length < 1) return null;

@@ -32,6 +32,8 @@ export const EntryReferenceListField = () => {
     sdk.window.startAutoResizer();
   }, [sdk]);
 
+  // TODO - not wired up to any control yet. This should back the
+  // "Add existing content" menu item below.
   const handleAdd = async () => {
     const selected = await sdk.dialogs.selectMultipleEntries<Entry>();
     if (!selected) return;
@@ -82,6 +84,7 @@ export const EntryReferenceListField = () => {
             </Button>
           </Menu.Trigger>
           <Menu.List>
+            {/* TODO - no onClick; should call handleAdd */}
             <Menu.Item>Add existing content</Menu.Item>
             <Menu.Divider />
             <Menu.SectionTitle>New content</Menu.SectionTitle>
@@ -132,6 +135,8 @@ const CreateNewContentTypeWithDocumentationOption = ({
     <Menu.Submenu>
       <Menu.SubmenuTrigger>{contentType.name}</Menu.SubmenuTrigger>
       <Menu.List>
+        {/* TODO - no onClick; should create an entry of this content type
+            and open it (sdk.cma.entry.create + sdk.navigator.openNewEntry) */}
         <Menu.Item icon={<PlusIcon variant="secondary" />}>
           Create new entry
         </Menu.Item>
@@ -178,14 +183,18 @@ const EntryInstance = ({
 
   if (!entry || !contentType) return null;
 
+  // The linked entry's own fields, so this is the space's default locale —
+  // not parameters.documentationLocale, which only applies to documentation.
+  const locale = sdk.locales.default;
+
   return (
     <EntryCard
       key={id}
       withDragHandle
       onClick={() => sdk.navigator.openEntry(id, { slideIn: true })}
       contentType={contentType.name}
-      status={(entry.sys as any).fieldStatus["*"]["en-US"] ?? undefined}
-      title={entry.fields?.contentfulUiLabel?.["en-US"] ?? ""}
+      status={(entry.sys as any).fieldStatus?.["*"]?.[locale] ?? undefined}
+      title={entry.fields?.[contentType.displayField]?.[locale] ?? ""}
       actions={[
         <MenuItem key="remove" onClick={onRemove}>
           Remove

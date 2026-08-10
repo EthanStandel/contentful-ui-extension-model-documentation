@@ -1,79 +1,75 @@
-This project was bootstrapped with [Create Contentful App](https://github.com/contentful/create-contentful-app).
+# Contentful module visualization UI extension
 
-## How to use
+## Project details
 
-Execute create-contentful-app with npm, npx or yarn to bootstrap the example:
+### Elevator pitch
+
+A Contentful plugin for a new entry-list selector field control which can help alleviate a lot of the problems & confusion that many clients have when we try to introduce them to Contentful during project handoffs.
+
+### Problem / Opportunity
+
+Contentful’s UI lacks any good opportunities for visual representation of what an entry actually looks like when filled out and placed on a site. This means that when clients are going through a site-handoff, we have historically had to write a lot of documentation or pass off Figma files that explain what certain names mean. However, the process of manually correlating and differentiating names is incredibly clunky (e.g. “Primary Hero” vs “Homepage Hero” vs “FiftyFifty Hero”).
+
+While using Contentful’s preview-mode can give a good perspective on how an existing page is constructed, many clients seem to get lost when it comes to creating new pages. This issue has also often added a lot of late-stage friction in projects that slows down completion timelines.
+
+The plan here is to use Contentful’s UI Extension framework and their Forma36 UI library to create a plugin that allows for inline visualization & documentation to give client content editors better context for what an entry name is actually representing.
+
+### Proposed Outcome
+
+#### Phases
+
+1. A functional prototype for just the entry visualization plugin which can be internally installed into client projects by deploying & configuring it directly to a client’s Contentful space.
+2. A brown-bag/tech-talk discussion with greater technical organization to help normalize getting this tool into practice.
+3. An extended version of the functional prototype which adds a configuration page to manage the technical side of the plugin setup.
+4. Deploying completed product the the Contentful Marketplace
+
+## Technical details
+
+### Project layout
+
+```
+src/
+  index.tsx                        # root render; SDKProvider + SWRConfig, or the localhost warning
+  App.tsx                          # map SDK locations to a component
+  config/
+    AppInstallationParameters.ts   # zod schema + defaults for installation parameters
+  locations/                       # one folder per Contentful app location
+    ConfigScreen/                  # app configuration screen (the installation UX)
+    Field/                         # the entry-list field control
+    Dialog/                        # modal documentation viewer
+    Sidebar/                       # collapsible documentation panel on the entry editor
+    EntryEditor/, Home/, Page/     # untouched create-contentful-app scaffolding
+  components/
+    Documentation/                 # fetches + renders a content type's documentation rich text
+    EmbeddedAsset/                 # rich-text embedded-asset renderer
+    LocalhostWarning.tsx
+  hooks/                           # SWR-backed CMA reads + installation-parameter access
+```
+
+### Local development
+
+#### Initial setup
 
 ```bash
-# npx
-npx create-contentful-app --typescript
-
-# npm
-npm init contentful-app -- --typescript
-
-# Yarn
-yarn create contentful-app --typescript
+npm install
+npm run dev
 ```
 
-## Available Scripts
+#### Contentful space setup
 
-In the project directory, you can run:
+When introducing this plugin for developer testing into a space, your user must have the ability to install custom apps into the space.
 
-#### `npm start`
+![custom applications](./docs/custom-apps.png)
 
-Creates or updates your app definition in Contentful, and runs the app in development mode.
-Open your app to view it in the browser.
+If you have this capability, you can click on the above menu and then select `<> Manage App Definitions` and then `Create app`. You can then set up the app with the initial settings shown below.
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+![new custom app settings](./docs/new-custom-app-settings.png)
 
-#### `npm run build`
+### Resources
 
-Builds the app for production to the `build` folder.
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.
-Your app is ready to be deployed!
-
-#### `npm run upload`
-
-Uploads the build folder to contentful and creates a bundle that is automatically activated.
-The command guides you through the deployment process and asks for all required arguments.
-Read [here](https://www.contentful.com/developers/docs/extensibility/app-framework/create-contentful-app/#deploy-with-contentful) for more information about the deployment process.
-
-#### `npm run upload-ci`
-
-Similar to `npm run upload` it will upload your app to contentful and activate it. The only difference is  
-that with this command all required arguments are read from the environment variables, for example when you add
-the upload command to your CI pipeline.
-
-For this command to work, the following environment variables must be set:
-
-- `CONTENTFUL_ORG_ID` - The ID of your organization
-- `CONTENTFUL_APP_DEF_ID` - The ID of the app to which to add the bundle
-- `CONTENTFUL_ACCESS_TOKEN` - A personal [access token](https://www.contentful.com/developers/docs/references/content-management-api/#/reference/personal-access-tokens)
-
-## Libraries to use
-
-To make your app look and feel like Contentful use the following libraries:
-
-- [Forma 36](https://f36.contentful.com/) – Contentful's design system
-- [Contentful Field Editors](https://www.contentful.com/developers/docs/extensibility/field-editors/) – Contentful's field editor React components
-
-## Using the `contentful-management` SDK
-
-In the default create contentful app output, a contentful management client is
-passed into each location. This can be used to interact with Contentful's
-management API. For example
-
-```js
-// Use the client
-cma.locale.getMany({}).then((locales) => console.log(locales));
-```
-
-Visit the [`contentful-management` documentation](https://www.contentful.com/developers/docs/extensibility/app-framework/sdk/#using-the-contentful-management-library)
-to find out more.
-
-## Learn More
-
-[Read more](https://www.contentful.com/developers/docs/extensibility/app-framework/create-contentful-app/) and check out the video on how to use the CLI.
+- Contentful docs
+  - [App SDK Reference](https://www.contentful.com/developers/docs/extensibility/app-framework/sdk/)
+  - [React Apps Toolkit](https://www.contentful.com/developers/docs/extensibility/app-framework/react-apps-toolkit/)
+  - [Create Contentful App CLI](https://www.contentful.com/developers/docs/extensibility/app-framework/create-contentful-app/)
+- [Official create-contentful-app NPM package](https://www.npmjs.com/package/create-contentful-app)
+- [Forma36 design system & components](https://f36.contentful.com/)

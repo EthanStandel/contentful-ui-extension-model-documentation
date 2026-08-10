@@ -4,6 +4,9 @@ import { useDocumentationTypeExists } from "../../hooks/useDocumentationTypeExis
 import { CreateDocumentationTypeButtonGroup } from "./components/CreateDocumentationTypeButtonGroup/CreateDocumentationTypeButtonGroup";
 import { ContentTypeDocumentationInstallationTable } from "./components/ContentTypeDocumentationInstallationTable";
 
+// TODO - this screen always operates on AppInstallationParameters.getDefault().
+// The schema already supports customizing the content type ID, label, field
+// names and locale, but there's no UI to edit them yet.
 export const ConfigScreen = () => {
   const { exists } = useDocumentationTypeExists();
 

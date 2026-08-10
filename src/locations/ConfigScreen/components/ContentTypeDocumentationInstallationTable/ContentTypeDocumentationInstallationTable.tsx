@@ -23,7 +23,9 @@ export const ContentTypeDocumentationInstallationTable = () => {
         {contentTypes.map((ct) => {
           const documentation = documentationEntries.find(
             (entry) =>
-              entry.fields.typeId[parameters.documentationLocale] === ct.sys.id,
+              entry.fields[parameters.documentationModel.fields.type.id]?.[
+                parameters.documentationLocale
+              ] === ct.sys.id,
           );
           return (
             <Table.Row key={ct.sys.id}>
