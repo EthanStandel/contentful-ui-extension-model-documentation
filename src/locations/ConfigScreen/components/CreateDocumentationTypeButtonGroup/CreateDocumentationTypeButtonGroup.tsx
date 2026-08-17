@@ -5,6 +5,7 @@ import { useSDK } from "@contentful/react-apps-toolkit";
 import { useIsInstalled } from "../../../../hooks/useIsInstalled";
 import { useDocumentationTypeExists } from "../../../../hooks/useDocumentationTypeExists";
 import { useAppParameters } from "../../../../hooks/useAppParameters";
+import { contentfulUrl } from "../../../../utils/contentfulUrl";
 import { createDocumentationType } from "./utils/createDocumentationType";
 
 export const CreateDocumentationTypeButtonGroup = () => {
@@ -49,9 +50,12 @@ export const CreateDocumentationTypeButtonGroup = () => {
       {exists && (
         <Button
           as="a"
-          target="_top"
-          // Does not work on local, but should work when deployed on same-origin
-          href={`/spaces/${sdk.ids.space}/environments/${sdk.ids.environment}/content_types/${parameters.documentationModel.contentTypeId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          href={contentfulUrl(
+            sdk,
+            `content_types/${parameters.documentationModel.contentTypeId}`,
+          )}
         >
           {CONSTANTS.viewCta.label}
         </Button>

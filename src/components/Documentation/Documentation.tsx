@@ -63,7 +63,7 @@ export const Documentation = ({
     [documentation, parameters.documentationLocale],
   );
 
-  if (!documentationRender) return;
+  if (!documentationRender) return null;
 
   return (
     <Flex
