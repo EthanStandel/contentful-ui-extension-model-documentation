@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import { useAppParameters } from "./useAppParameters";
-import { useRef } from "react";
 import { useIsInstalled } from "./useIsInstalled";
 import { useStableResponse } from "./useStableResponse";
 

@@ -5,6 +5,9 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import LocalhostWarning from "./components/LocalhostWarning";
 import { SWRConfig } from "swr";
+import { activateI18n } from "./config/i18n";
+
+activateI18n();
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);

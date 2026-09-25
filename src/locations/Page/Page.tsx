@@ -1,6 +1,6 @@
-import { Paragraph } from '@contentful/f36-components';
-import { PageAppSDK } from '@contentful/app-sdk';
-import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
+import { Paragraph } from "@contentful/f36-components";
+import { PageAppSDK } from "@contentful/app-sdk";
+import { /* useCMA, */ useSDK } from "@contentful/react-apps-toolkit";
 
 const Page = () => {
   const sdk = useSDK<PageAppSDK>();

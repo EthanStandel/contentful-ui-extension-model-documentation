@@ -1,10 +1,9 @@
 import { SidebarAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
-import { useEffect } from "react";
 import { Node } from "@contentful/rich-text-types";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import useSWR from "swr";
-import { useAppParameters } from "../../hooks/useAppParameters";
+import { useAppParameters } from "~/hooks/useAppParameters";
 
 export const EmbeddedAsset = ({ node }: { node: Node }) => {
   const sdk = useSDK<SidebarAppSDK>();

@@ -1,5 +1,5 @@
 import { ConfigAppSDK } from "@contentful/app-sdk";
-import { AppInstallationParameters } from "../../../../../config/AppInstallationParameters";
+import { AppInstallationParameters } from "~/config/AppInstallationParameters";
 
 export const createDocumentationType = async (
   sdk: ConfigAppSDK,

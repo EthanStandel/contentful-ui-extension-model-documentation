@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { locations } from "@contentful/app-sdk";
-import { EntryReferenceListField } from "./locations/Field";
+import { EntryReferenceField } from "./locations/Field";
 import { Dialog } from "./locations/Dialog";
 import { Sidebar } from "./locations/Sidebar/Sidebar";
 import { useSDK } from "@contentful/react-apps-toolkit";
@@ -8,7 +8,7 @@ import { ConfigScreen } from "./locations/ConfigScreen";
 
 const ComponentLocationSettings = {
   [locations.LOCATION_APP_CONFIG]: ConfigScreen,
-  [locations.LOCATION_ENTRY_FIELD]: EntryReferenceListField,
+  [locations.LOCATION_ENTRY_FIELD]: EntryReferenceField,
   [locations.LOCATION_ENTRY_EDITOR]: null,
   [locations.LOCATION_DIALOG]: Dialog,
   [locations.LOCATION_ENTRY_SIDEBAR]: Sidebar,

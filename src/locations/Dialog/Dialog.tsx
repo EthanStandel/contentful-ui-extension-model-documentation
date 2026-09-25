@@ -1,23 +1,35 @@
 import { DialogAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
-import { Documentation } from "../../components/Documentation";
-import { css } from "emotion";
+import { css } from "@emotion/css";
+import tokens from "@contentful/f36-tokens";
+import { Documentation } from "~/components/Documentation";
+import { useInvocationData } from "~/hooks/useInvocationData";
+import { ContentTypePicker } from "./components/ContentTypePicker";
 
 export const Dialog = () => {
   const sdk = useSDK<DialogAppSDK>();
+  const invocation = useInvocationData();
 
-  const contentTypeId = (sdk.parameters.invocation as any)
-    ?.contentTypeId as string;
-
-  if (!contentTypeId) {
-    sdk.close();
-    return null;
+  switch (invocation?.type) {
+    case "picker-dialog":
+      return <ContentTypePicker />;
+    case "documentation-dialog":
+      return (
+        <Documentation
+          contentTypeId={invocation.data.contentTypeId}
+          className={styles.documentation}
+        />
+      );
+    default:
+      sdk.close();
+      return null;
   }
+};
 
-  return (
-    <Documentation
-      contentTypeId={contentTypeId}
-      className={css({ padding: "16px 24px" })}
-    />
-  );
+const styles = {
+  documentation: css({
+    height: "100vh",
+    overflowY: "auto",
+    padding: `${tokens.spacingM} ${tokens.spacingL}`,
+  }),
 };

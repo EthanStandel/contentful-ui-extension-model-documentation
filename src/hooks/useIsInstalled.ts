@@ -1,4 +1,4 @@
-import { AppConfigAPI, ConfigAppSDK } from "@contentful/app-sdk";
+import { ConfigAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import useSWR from "swr";
 

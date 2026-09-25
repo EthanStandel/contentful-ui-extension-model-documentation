@@ -2,11 +2,12 @@ import { useState } from "react";
 import { ConfigAppSDK } from "@contentful/app-sdk";
 import { Flex, Button, Tooltip } from "@contentful/f36-components";
 import { useSDK } from "@contentful/react-apps-toolkit";
-import { useIsInstalled } from "../../../../hooks/useIsInstalled";
-import { useDocumentationTypeExists } from "../../../../hooks/useDocumentationTypeExists";
-import { useAppParameters } from "../../../../hooks/useAppParameters";
-import { contentfulUrl } from "../../../../utils/contentfulUrl";
+import { useIsInstalled } from "~/hooks/useIsInstalled";
+import { useDocumentationTypeExists } from "~/hooks/useDocumentationTypeExists";
+import { useAppParameters } from "~/hooks/useAppParameters";
+import { contentfulUrl } from "~/utils/contentfulUrl";
 import { createDocumentationType } from "./utils/createDocumentationType";
+import { translate } from "~/config/translate";
 
 export const CreateDocumentationTypeButtonGroup = () => {
   const [loading, setLoading] = useState(false);
@@ -17,14 +18,18 @@ export const CreateDocumentationTypeButtonGroup = () => {
 
   const createCTATooltipMessage = (() => {
     if (!isInstalled) {
-      return CONSTANTS.createCta.tooltip.uninstalled;
+      return translate(
+        "configScreen.createDocumentationTypeButtonGroup.createTooltipUninstalled",
+      );
     } else if (exists) {
-      return CONSTANTS.createCta.tooltip.exists;
+      return translate(
+        "configScreen.createDocumentationTypeButtonGroup.createTooltipExists",
+      );
     } else return "";
   })();
 
   return (
-    <Flex gap="1rem" flexWrap="wrap">
+    <Flex gap="spacingM" flexWrap="wrap">
       <Tooltip
         placement="top"
         content={createCTATooltipMessage}
@@ -44,7 +49,9 @@ export const CreateDocumentationTypeButtonGroup = () => {
             }
           }}
         >
-          {CONSTANTS.createCta.label}
+          {translate(
+            "configScreen.createDocumentationTypeButtonGroup.createLabel",
+          )}
         </Button>
       </Tooltip>
       {exists && (
@@ -57,23 +64,11 @@ export const CreateDocumentationTypeButtonGroup = () => {
             `content_types/${parameters.documentationModel.contentTypeId}`,
           )}
         >
-          {CONSTANTS.viewCta.label}
+          {translate(
+            "configScreen.createDocumentationTypeButtonGroup.viewLabel",
+          )}
         </Button>
       )}
     </Flex>
   );
-};
-
-const CONSTANTS = {
-  createCta: {
-    label: "Create documentation content type",
-    tooltip: {
-      uninstalled:
-        "The content type cannot be generated until this extension is installed to your space.",
-      exists: "This content type already exists",
-    },
-  },
-  viewCta: {
-    label: "View documentation content type",
-  },
 };

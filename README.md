@@ -23,6 +23,23 @@ The plan here is to use Contentful’s UI Extension framework and their Forma36 
 3. An extended version of the functional prototype which adds a configuration page to manage the technical side of the plugin setup.
 4. Deploying completed product the the Contentful Marketplace
 
+## How it works
+
+Documentation for each content type is stored as an ordinary Contentful entry, written with the normal rich-text editor. The plugin shows that documentation while an editor is choosing what to add.
+
+1. **Configure.** On the app's configuration screen, click **Create documentation content type**, then use the table to create a documentation entry for each content type. Write and publish it.
+2. **Add content.** On a reference field using this app, click **Add content**.
+
+   ![Empty reference field with the Add content button](./src/locations/Field/components/AddContentButton/__screenshots__/empty-chromium-darwin.png)
+
+3. **Pick a type.** The picker lists the field's content types beside each type's documentation. Choose one and click **Create new entry**, or **Add existing content**.
+
+   ![Picker showing the Primary Hero documentation](./src/locations/Dialog/components/ContentTypePicker/__screenshots__/picker-documented-chromium-darwin.png)
+
+4. **Linked entry.** The new entry appears in the field. Its card's `…` menu has **View documentation**, and the entry's sidebar shows the same documentation.
+
+   ![Reference field with a linked entry card](./src/locations/Field/components/DocumentedEntryCard/__screenshots__/populated-chromium-darwin.png)
+
 ## Technical details
 
 ### Project layout

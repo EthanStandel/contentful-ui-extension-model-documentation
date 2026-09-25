@@ -1,6 +1,6 @@
 import { ConfigAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
-import { AppInstallationParameters } from "../config/AppInstallationParameters";
+import { AppInstallationParameters } from "~/config/AppInstallationParameters";
 import { useEffect, useState } from "react";
 import { useStableResponse } from "./useStableResponse";
 
