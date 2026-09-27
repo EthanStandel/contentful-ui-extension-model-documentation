@@ -7,6 +7,7 @@ import { ComponentProps, useMemo } from "react";
 import {
   Document as RichTextDocument,
   BLOCKS,
+  INLINES,
 } from "@contentful/rich-text-types";
 import { EmbeddedAsset } from "~/components/EmbeddedAsset";
 import { css, cx } from "@emotion/css";
@@ -106,5 +107,24 @@ export const Documentation = ({
 const richTextOptions = {
   renderNode: {
     [BLOCKS.EMBEDDED_ASSET]: (node) => <EmbeddedAsset node={node} />,
+    [INLINES.HYPERLINK]: (node, children) =>
+      /^iframe$/.test(
+        node.content
+          .map((child) => (child.nodeType === "text" ? child.value : ""))
+          .join(""),
+      ) ? (
+        <iframe
+          src={node.data.uri}
+          title={node.data.uri}
+          allowFullScreen
+          className={css({
+            width: "100%",
+            aspectRatio: "16 / 9",
+            border: `1px solid ${tokens.gray300}`,
+          })}
+        />
+      ) : (
+        <a href={node.data.uri}>{children}</a>
+      ),
   },
 } satisfies RichTextRenderOptions;

@@ -40,6 +40,10 @@ Documentation for each content type is stored as an ordinary Contentful entry, w
 
    ![Reference field with a linked entry card](./src/locations/Field/components/DocumentedEntryCard/__screenshots__/populated-chromium-darwin.png)
 
+### Embedding pages in documentation
+
+To embed a web page, such as a video, a Figma prototype, or a live example, add a hyperlink whose text is exactly `iframe`. The link's URL is then shown as a full-width 16:9 frame instead of a link. Only the page's own settings decide whether it can be embedded, so some sites show a blank frame.
+
 ## Technical details
 
 ### Project layout
