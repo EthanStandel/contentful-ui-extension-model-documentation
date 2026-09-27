@@ -150,7 +150,11 @@ from fake SDKs (`@contentful/field-editor-test-utils`) over one fixture space in
 reach in a real space — a read-only role, a deleted entry — are just options on
 [MockField.render](src/test/MockField.tsx). The picker's
 [MockPicker.render](src/test/MockPicker.tsx) builds a dialog SDK over the same
-fixtures. Specs and their baselines sit beside components; the harnesses they
+fixtures, and [MockDocumentation.render](src/test/MockDocumentation.tsx) mounts
+`Documentation` alone over a single entry. Its embedded-page spec loads the real
+`https://example.com/`, so it needs network access. It waits on that URL's
+resource-timing entry rather than looking inside the frame, because
+`expect.element` cannot reach into a cross-origin frame. Specs and their baselines sit beside components; the harnesses they
 share — fixtures, render helpers, and the `TestSdk` holder the `useSDK` mock reads —
 live together in [src/test](src/test), since they span locations.
 

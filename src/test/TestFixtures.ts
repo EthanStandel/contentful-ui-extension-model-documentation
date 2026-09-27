@@ -42,6 +42,50 @@ export namespace TestFixtures {
     ),
   ];
 
+  export const embeddedPageDocumentationEntry = buildEntry(
+    "doc-fifty-fifty-hero",
+    "internal__documentation",
+    {
+      label: '[INTERNAL] "FiftyFifty Hero" documentation',
+      typeId: "fiftyFiftyHero",
+    },
+    {
+      documentation: {
+        nodeType: "document",
+        data: {},
+        content: [
+          {
+            nodeType: "paragraph",
+            data: {},
+            content: [
+              {
+                nodeType: "text",
+                value: "Iframe content example",
+                marks: [],
+                data: {},
+              },
+            ],
+          },
+          {
+            nodeType: "paragraph",
+            data: {},
+            content: [
+              { nodeType: "text", value: "", marks: [], data: {} },
+              {
+                nodeType: "hyperlink",
+                data: { uri: "https://example.com/" },
+                content: [
+                  { nodeType: "text", value: "iframe", marks: [], data: {} },
+                ],
+              },
+              { nodeType: "text", value: "", marks: [], data: {} },
+            ],
+          },
+        ],
+      },
+    },
+  );
+
   export const entries = [
     buildEntry("entry-primary-hero", "primaryHero", {
       title: "Spring campaign hero",
