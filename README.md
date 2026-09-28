@@ -42,7 +42,7 @@ Documentation for each content type is stored as an ordinary Contentful entry, w
 
 ### Embedding pages in documentation
 
-To embed a web page, such as a video, a Figma prototype, or a live example, add a hyperlink whose text is exactly `iframe`. The link's URL is then shown as a full-width 16:9 frame instead of a link. Only the page's own settings decide whether it can be embedded, so some sites show a blank frame.
+To embed a web page, such as a video, a Figma prototype, or a live example, add a hyperlink whose text is exactly `iframe`. The link's URL is then shown as a full-width 16:9 frame instead of a link, with an **Open in new tab** link below it. Only the page's own settings decide whether it can be embedded, so some sites show a blank frame; the **Open in new tab** link still works for those.
 
 ## Technical details
 

@@ -12,7 +12,8 @@ import {
 import { EmbeddedAsset } from "~/components/EmbeddedAsset";
 import { css, cx } from "@emotion/css";
 import tokens from "@contentful/f36-tokens";
-import { Flex, Note } from "@contentful/f36-components";
+import { Flex, Note, TextLink } from "@contentful/f36-components";
+import { ArrowSquareOutIcon } from "@contentful/f36-icons";
 import useSWR from "swr";
 import { useAppParameters } from "~/hooks/useAppParameters";
 import { useCanAuthorDocumentation } from "~/hooks/useCanAuthorDocumentation";
@@ -113,16 +114,38 @@ const richTextOptions = {
           .map((child) => (child.nodeType === "text" ? child.value : ""))
           .join(""),
       ) ? (
-        <iframe
-          src={node.data.uri}
-          title={node.data.uri}
-          allowFullScreen
+        <Flex
+          as="span"
+          flexDirection="column"
+          alignItems="center"
+          gap="spacingXs"
+          padding="spacingXs"
           className={css({
-            width: "100%",
-            aspectRatio: "16 / 9",
             border: `1px solid ${tokens.gray300}`,
+            borderRadius: tokens.borderRadiusMedium,
+            overflow: "hidden",
           })}
-        />
+        >
+          <iframe
+            src={node.data.uri}
+            title={node.data.uri}
+            allowFullScreen
+            className={css({
+              width: "100%",
+              aspectRatio: "16 / 9",
+              border: "none",
+            })}
+          />
+          <TextLink
+            href={node.data.uri}
+            target="_blank"
+            rel="noreferrer"
+            icon={<ArrowSquareOutIcon />}
+            alignIcon="end"
+          >
+            {translate("documentation.openInNewTab")}
+          </TextLink>
+        </Flex>
       ) : (
         <a href={node.data.uri}>{children}</a>
       ),

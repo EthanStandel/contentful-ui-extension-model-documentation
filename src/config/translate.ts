@@ -70,5 +70,6 @@ export const translate = createTranslate({
     unpublished:
       "This documentation has not been published yet, so other editors cannot see it.",
     entryLabel: '[INTERNAL] "{contentTypeName}" documentation',
+    openInNewTab: "Open in new tab",
   },
 });
