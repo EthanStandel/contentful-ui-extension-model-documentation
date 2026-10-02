@@ -1,9 +1,12 @@
 import { i18n } from "@lingui/core";
+import { compileMessage } from "@lingui/message-utils/compileMessage";
 
 const LOCALE = "en";
 
-export const activateI18n = () =>
+export const activateI18n = () => {
+  i18n.setMessagesCompiler(compileMessage);
   i18n.loadAndActivate({ locale: LOCALE, messages: {} });
+};
 
 type Catalog = { readonly [key: string]: string | Catalog };
 

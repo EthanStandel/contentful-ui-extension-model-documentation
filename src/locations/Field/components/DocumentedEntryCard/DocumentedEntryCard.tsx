@@ -112,7 +112,7 @@ export const DocumentedEntryCard = ({
             }),
             shouldCloseOnEscapePress: true,
             shouldCloseOnOverlayClick: true,
-            width: "large",
+            width: "fullWidth",
             minHeight: "calc(100vh - 170px)",
             parameters: {
               type: "documentation-dialog",
