@@ -1,0 +1,44 @@
+diff --git a/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/EmbeddedEntityInline/FetchingWrappedInlineEntryCard.js b/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/EmbeddedEntityInline/FetchingWrappedInlineEntryCard.js
+index 07e50d0..6cf4109 100644
+--- a/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/EmbeddedEntityInline/FetchingWrappedInlineEntryCard.js
++++ b/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/EmbeddedEntityInline/FetchingWrappedInlineEntryCard.js
+@@ -14,7 +14,7 @@ const styles = {
+         marginRight: tokens.spacing2Xs
+     })
+ };
+-function InternalFetchingWrappedInlineEntryCard({ entry, contentType, locale, defaultLocale, isSelected, entryStatus, getEntityScheduledActions, onEdit, onRemove, isDisabled }) {
++function InternalFetchingWrappedInlineEntryCard({ sdk, entry, contentType, locale, defaultLocale, isSelected, entryStatus, getEntityScheduledActions, onEdit, onRemove, isDisabled }) {
+     const title = React.useMemo(()=>getEntryTitle({
+             entry,
+             contentType,
+@@ -42,7 +42,8 @@ function InternalFetchingWrappedInlineEntryCard({ entry, contentType, locale, de
+                 onClick: onRemove,
+                 disabled: isDisabled,
+                 testId: "delete"
+-            }, "Remove")
++            }, "Remove"),
++            ...sdk.documentedEntryCards?.inlineActions?.(contentType) ?? []
+         ]
+     }, /*#__PURE__*/ React.createElement(ScheduledIconWithTooltip, {
+         getEntityScheduledActions: getEntityScheduledActions,
+@@ -99,6 +100,7 @@ function InternalFetchingWrappedInlineEntryCardWrapper(props) {
+         });
+     }
+     return /*#__PURE__*/ React.createElement(InternalFetchingWrappedInlineEntryCard, {
++        sdk: props.sdk,
+         contentType: contentType,
+         getEntityScheduledActions: ()=>getEntityScheduledActions('Entry', props.entryId),
+         locale: props.sdk.field.locale,
+diff --git a/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/shared/FetchingWrappedEntryCard.js b/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/shared/FetchingWrappedEntryCard.js
+index 25d94fd..de5a0b3 100644
+--- a/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/shared/FetchingWrappedEntryCard.js
++++ b/node_modules/@contentful/field-editor-rich-text/dist/esm/plugins/shared/FetchingWrappedEntryCard.js
+@@ -6,7 +6,7 @@ import { isLoadingStatus, SharedQueryClientProvider, useContentType } from '@con
+ import areEqual from 'fast-deep-equal';
+ const InternalEntryCard = /*#__PURE__*/ React.memo(({ entry, sdk, loadEntityScheduledActions, releaseStatusMap, release, releaseEntityStatus, isSelected, isDisabled, locale, contentType, onEdit, onRemove, localesStatusMap })=>{
+     const activeLocales = useActiveLocales(sdk);
+-    return /*#__PURE__*/ React.createElement(WrappedEntryCard, {
++    return /*#__PURE__*/ React.createElement(sdk.documentedEntryCards?.Block ?? WrappedEntryCard, {
+         size: "default",
+         getAsset: (assetId)=>sdk.cma.asset.get({
+                 assetId

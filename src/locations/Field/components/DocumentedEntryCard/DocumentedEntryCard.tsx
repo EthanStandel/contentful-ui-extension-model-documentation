@@ -13,8 +13,7 @@ import {
   type CustomEntityCardProps,
 } from "@contentful/field-editor-reference";
 import { entityHelpers, isValidImage } from "@contentful/field-editor-shared";
-import { useDocumentationEntryLookup } from "~/hooks/useDocumentationEntryLookup";
-import type { InvocationData } from "~/hooks/useInvocationData";
+import { ViewDocumentationMenuItem } from "~/locations/Field/components/ViewDocumentationMenuItem";
 import { translate } from "~/config/translate";
 
 const { getEntryTitle, getEntityDescription, getEntityStatus, getEntryImage } =
@@ -45,14 +44,9 @@ export const DocumentedEntryCard = ({
   hasCardRemoveActions?: boolean;
 }) => {
   const sdk = useSDK<FieldAppSDK>();
-  const { getDocumentationEntryId } = useDocumentationEntryLookup();
   const [file, setFile] = React.useState<any>(null);
 
   const entry = entity as any;
-  const contentTypeId: string | undefined = entry?.sys?.contentType?.sys?.id;
-  const documentationEntryId = contentTypeId
-    ? getDocumentationEntryId(contentTypeId)
-    : undefined;
 
   React.useEffect(() => {
     let mounted = true;
@@ -101,28 +95,10 @@ export const DocumentedEntryCard = ({
       </MenuItem>
     ) : null,
     contentType ? (
-      <MenuItem
+      <ViewDocumentationMenuItem
         key="documentation"
-        testId="view-documentation"
-        isDisabled={!documentationEntryId}
-        onClick={() =>
-          sdk.dialogs.openCurrent({
-            title: translate("documentation.dialogTitle", {
-              contentTypeName: contentType.name,
-            }),
-            shouldCloseOnEscapePress: true,
-            shouldCloseOnOverlayClick: true,
-            width: "fullWidth",
-            minHeight: "calc(100vh - 170px)",
-            parameters: {
-              type: "documentation-dialog",
-              data: { contentTypeId: contentType.sys.id },
-            } satisfies InvocationData,
-          })
-        }
-      >
-        {translate("field.documentedEntryCard.viewDocumentation")}
-      </MenuItem>
+        contentType={contentType}
+      />
     ) : null,
     hasCardRemoveActions && onRemove && !isDisabled ? (
       <MenuItem key="delete" testId="delete" onClick={() => onRemove()}>

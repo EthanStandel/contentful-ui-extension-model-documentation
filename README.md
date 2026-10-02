@@ -40,6 +40,17 @@ Documentation for each content type is stored as an ordinary Contentful entry, w
 
    ![Reference field with a linked entry card](./src/locations/Field/components/DocumentedEntryCard/__screenshots__/populated-chromium-darwin.png)
 
+### Rich text fields
+
+The same flow works on rich text fields with embedded entries. Assign this app as the field's appearance, and **Embed → Entry** or **Embed → Inline entry** in the toolbar opens the picker in place of Contentful's selector:
+
+- The picker lists only the content types the field allows for that kind of embed. Rich text sets these separately for block embeds, inline embeds, and entry hyperlinks; a kind of embed with no restriction lists every content type.
+- **Create new entry** opens the new entry in a slide-in and embeds it. **Add existing content** opens Contentful's usual entry selector for the field.
+- Embedded entry cards, block and inline, have **View documentation** in their `…` menu.
+- Entry hyperlinks use the same picker. Assets and entries from other spaces keep Contentful's own selectors.
+
+For the app to appear as an option on a rich text field, its app definition's **Entry field** location must include the **Rich text** field type alongside **Entry reference**.
+
 ### Embedding pages in documentation
 
 To embed a web page, such as a video, a Figma prototype, or a live example, add a hyperlink whose text is exactly `iframe`. The link's URL is then shown as a full-width 16:9 frame instead of a link, with an **Open in new tab** link below it. Only the page's own settings decide whether it can be embedded, so some sites show a blank frame; the **Open in new tab** link still works for those.
@@ -56,8 +67,8 @@ src/
     AppInstallationParameters.ts   # zod schema + defaults for installation parameters
   locations/                       # one folder per Contentful app location
     ConfigScreen/                  # app configuration screen (the installation UX)
-    Field/                         # the entry-list field control
-    Dialog/                        # modal documentation viewer
+    Field/                         # reference and rich text field controls
+    Dialog/                        # content type picker + documentation viewer
     Sidebar/                       # collapsible documentation panel on the entry editor
     EntryEditor/, Home/, Page/     # untouched create-contentful-app scaffolding
   components/
@@ -65,7 +76,12 @@ src/
     EmbeddedAsset/                 # rich-text embedded-asset renderer
     LocalhostWarning.tsx
   hooks/                           # SWR-backed CMA reads + installation-parameter access
+patches/                           # patch-package patch adding card overrides to the rich text editor
 ```
+
+### Rich text editor dependencies
+
+The rich text field is Contentful's own [`@contentful/field-editor-rich-text`](https://www.npmjs.com/package/@contentful/field-editor-rich-text), which has no way to customise its embedded entry cards. A small patch in `patches/`, applied automatically by `npm install` through `postinstall`, adds that. `slate` is also pinned in `overrides` in `package.json`, because newer versions crash the editor on render. Both need checking when that package is upgraded; [CLAUDE.md](CLAUDE.md) has the details.
 
 ### Local development
 

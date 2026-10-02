@@ -8,11 +8,14 @@ import {
 } from "@contentful/field-editor-reference";
 import { AddContentButton } from "./components/AddContentButton";
 import { DocumentedEntryCard } from "./components/DocumentedEntryCard";
+import { DocumentedRichTextEditor } from "./components/DocumentedRichTextEditor";
 import { useAutoResizer } from "~/hooks/useAutoResizer";
 
 export const EntryReferenceField = () => {
   const sdk = useSDK<FieldAppSDK>();
   useAutoResizer();
+
+  if (sdk.field.type === "RichText") return <DocumentedRichTextEditor />;
 
   const props = {
     sdk,

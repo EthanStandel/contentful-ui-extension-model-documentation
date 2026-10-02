@@ -7,7 +7,8 @@
     "@contentful/f36-components": "^6.19.0",
     "@contentful/f36-icons": "^6.19.0",
     "@contentful/f36-tokens": "^6.2.1",
-    "@contentful/field-editor-reference": "^8.4.1",
+    "@contentful/field-editor-reference": "^8.5.0",
+    "@contentful/field-editor-rich-text": "^6.5.0",
     "@contentful/field-editor-shared": "^4.5.1",
     "@contentful/react-apps-toolkit": "^1.2.16",
     "@contentful/rich-text-react-renderer": "^16.1.0",
@@ -21,6 +22,7 @@
     "zod": "^4.4.3"
   },
   "scripts": {
+    "postinstall": "patch-package",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -59,6 +61,7 @@
     "cross-env": "7.0.3",
     "eslint": "^10.8.1",
     "eslint-plugin-unused-imports": "^4.4.1",
+    "patch-package": "^8.0.1",
     "playwright": "^1.62.1",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
@@ -66,5 +69,8 @@
     "vitest": "^4.1.11",
     "vitest-browser-react": "^2.2.0"
   },
-  "homepage": "."
+  "homepage": ".",
+  "overrides": {
+    "slate": "0.103.0"
+  }
 }

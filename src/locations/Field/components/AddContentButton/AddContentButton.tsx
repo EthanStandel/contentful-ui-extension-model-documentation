@@ -5,12 +5,9 @@ import type { CustomActionProps } from "@contentful/field-editor-reference";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import { css } from "@emotion/css";
 import tokens from "@contentful/f36-tokens";
-import { useCreateDocumentationEntry } from "~/hooks/useCreateDocumentationEntry";
-import { useDocumentationEntryLookup } from "~/hooks/useDocumentationEntryLookup";
-import { useFetchAllContentType } from "~/hooks/useFetchAllContentType";
-import type { InvocationData } from "~/hooks/useInvocationData";
+import { useCreateOrEditDocumentation } from "~/hooks/useCreateOrEditDocumentation";
 import { getLinkableContentTypeIds } from "~/locations/Field/utils/getLinkableContentTypeIds";
-import type { ContentTypePicker } from "~/locations/Dialog/components/ContentTypePicker";
+import { openContentTypePicker } from "~/locations/Field/utils/openContentTypePicker";
 import { translate } from "~/config/translate";
 
 export const AddContentButton = ({
@@ -22,53 +19,23 @@ export const AddContentButton = ({
   canLinkEntity,
 }: CustomActionProps) => {
   const sdk = useSDK<FieldAppSDK>();
-  const { contentTypes } = useFetchAllContentType();
-  const createDocumentationEntry = useCreateDocumentationEntry();
-  const { getDocumentationEntryId, refetchDocumentationEntries } =
-    useDocumentationEntryLookup();
-
-  const authorDocumentation = async (contentTypeId: string) => {
-    const contentType = contentTypes.find(
-      (candidate) => candidate.sys.id === contentTypeId,
-    );
-    if (!contentType) return;
-
-    const entryId =
-      getDocumentationEntryId(contentTypeId) ??
-      (await createDocumentationEntry(contentType, { openAfterCreate: false }))
-        .sys.id;
-
-    await sdk.navigator.openEntry(entryId, { slideIn: { waitForClose: true } });
-    await refetchDocumentationEntries();
-  };
+  const { createOrEditDocumentation } = useCreateOrEditDocumentation();
 
   const openPicker = async () => {
-    const result: ContentTypePicker.Result | undefined =
-      await sdk.dialogs.openCurrent({
-        title: translate("field.addContentMenu.addContent"),
-        width: "fullWidth",
-        minHeight: "calc(100vh - 170px)",
-        position: "center",
-        shouldCloseOnEscapePress: true,
-        shouldCloseOnOverlayClick: true,
-        parameters: {
-          type: "picker-dialog",
-          data: {
-            linkableContentTypeIds: getLinkableContentTypeIds(sdk.field),
-            creatableContentTypeIds: creatableContentTypes.map(
-              (contentType) => contentType.sys.id,
-            ),
-            canLinkEntity,
-            isFull,
-          },
-        } satisfies InvocationData,
-      });
+    const result = await openContentTypePicker(sdk, {
+      linkableContentTypeIds: getLinkableContentTypeIds(sdk.field),
+      creatableContentTypeIds: creatableContentTypes.map(
+        (contentType) => contentType.sys.id,
+      ),
+      canLinkEntity,
+      isFull,
+    });
 
     if (!result) return;
     if (result.action === "create") await onCreate(result.contentTypeId);
     else if (result.action === "link") onLinkExisting();
     else if (result.action === "authorDocumentation")
-      await authorDocumentation(result.contentTypeId);
+      await createOrEditDocumentation(result.contentTypeId);
   };
 
   return (
